@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour
     public void PlayerDeath()
     {
         Destroy(gameObject);
-        GM.Respawn();
+        //GM.Respawn();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

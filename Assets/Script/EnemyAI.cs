@@ -13,12 +13,12 @@ public class EnemyAI : MonoBehaviour
     private Rigidbody2D rbEnemy;
     private float EnemyDPS;
 
-    void Awake()
+    void Awake() //criar setplayer no inimigo, find em todos objetos do tipo enemyai e armazenar em uma list, depois que criar o player, chamar o metodo do setplayer do inimigo.
     {
         rbEnemy = GetComponent<Rigidbody2D>();
         EnemyDPS = 1.5f;
-        PlayerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        //PlayerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        //Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
     }
 
     void Start()
@@ -32,20 +32,21 @@ public class EnemyAI : MonoBehaviour
     
     void Update()
     {
-        // codigo para achar a distancia entre jogador e inimigo.
-        float distToPlayer = Vector2.Distance(transform.position, Player.position);
-
-        if (distToPlayer < EnemyViewRange)
+        if (Player != null)
         {
-            //codigo para inimigo perseguir jogador.
-            ChasePlayer();
-        }
-        else
-        {
-            //inimigo para de perseguir jogador.
-            StopChasingPlayer();
-        }
+            float distToPlayer = Vector2.Distance(transform.position, Player.position);
 
+            if (distToPlayer < EnemyViewRange)
+            {
+                //codigo para inimigo perseguir jogador.
+                ChasePlayer();
+            }
+            else
+            {
+                //inimigo para de perseguir jogador.
+                StopChasingPlayer();
+            }
+        }
 
     }
 
@@ -114,8 +115,9 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    public void PlayerKilled()
+    public void SetPlayer(PlayerController player)
     {
-        Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        PlayerScript = player;
+        Player = player.gameObject.GetComponent<Transform>();
     }
 }

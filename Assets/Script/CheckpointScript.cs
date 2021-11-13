@@ -9,7 +9,7 @@ public class CheckpointScript : MonoBehaviour
 
     void Start()
     {
-        GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        GM = GameManager.instance;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -17,7 +17,7 @@ public class CheckpointScript : MonoBehaviour
         
         if (other.gameObject.tag == "Player")
         {
-            GM.LastCheckpointPos = transform.position;
+            GM.SetLastCheckpoint(transform.position);
         }
 
     }

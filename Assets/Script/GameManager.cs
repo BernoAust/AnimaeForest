@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     
-    private static GameManager instance;
+    public static GameManager instance;
     private GameManager GM;
     public Vector2 LastCheckpointPos;
     public GameObject playerPrefab;
@@ -16,39 +16,60 @@ public class GameManager : MonoBehaviour
     public GameObject pausePanel;
     public GameObject PausePrefab;
     public Canvas CanvasGO;
+    public PlayerController Player;
+    public Transform PlayerTransform;
+    public List<EnemyAI> Enemies = new List<EnemyAI>();
 
     void Awake()
     {
         
+        Debug.Log("GameManager Awake");
+
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(instance);
+           // DontDestroyOnLoad(instance);
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        // else
+        // {
+        //     Destroy(gameObject);
+        // }
     }
 
-    private void Start()
+    private void Start() //find object playerdata, checar se ele existe, se não, criar.
     {
+
+        Debug.Log("GameManager Start");
+
         GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        
         LastCheckpointPos = GM.LastCheckpointPos;
         LastCheckpointPos = new Vector2 (-6f, -4f);
         Time.timeScale = 1f;
+        SearchPausePanel();
+        Respawn();
+        GetEnemies();
+        
 
     }
 
     private void Update()
     {
         CheckUpdate();
-        SearchPausePanel();
     }
 
     public void Respawn()
     {
-        Instantiate(playerPrefab, new Vector3 (LastCheckpointPos.x, LastCheckpointPos.y, 0), Quaternion.identity);
+
+        Debug.Log("Respawn");
+
+        GameObject PlayerGO = Instantiate(playerPrefab, new Vector3 (LastCheckpointPos.x, LastCheckpointPos.y, 0), Quaternion.identity);
+        Player = PlayerGO.GetComponent<PlayerController>();
+        PlayerTransform = PlayerGO.GetComponent<Transform>();
+        Camera.main.GetComponent<CameraController>().SetTarget(PlayerTransform);
+        SearchPausePanel();
+
+
     }
 
     void CheckUpdate()
@@ -88,7 +109,28 @@ public class GameManager : MonoBehaviour
     {
         if (GM.pausePanel == null)
         {
+            GameObject PauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
+            if (PauseMenu == null)
+            {
+                Debug.Break();
+            }
+
+            Debug.Log(PauseMenu);
             GM.pausePanel = GameObject.FindGameObjectWithTag("PauseMenu").gameObject;
+        }
+    }
+
+    public void SetLastCheckpoint(Vector3 CheckpointPosition)
+    {
+        
+    }
+
+    public void GetEnemies()
+    {
+        Enemies.AddRange(GameObject.FindObjectsOfType<EnemyAI>());
+        foreach (var Enemy in Enemies)
+        {
+            Enemy.SetPlayer(Player);
         }
     }
 
