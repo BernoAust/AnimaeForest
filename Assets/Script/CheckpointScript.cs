@@ -5,11 +5,11 @@ using UnityEngine;
 public class CheckpointScript : MonoBehaviour
 {
 
-    private GameManager GM;
+    public PlayerData PD;
 
     void Start()
     {
-        GM = GameManager.instance;
+        PD = PlayerData.PData;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -17,10 +17,10 @@ public class CheckpointScript : MonoBehaviour
         
         if (other.gameObject.tag == "Player")
         {
-            GM.SetLastCheckpoint(transform.position);
+            PD.SetLastCheckpoint(transform.position);
         }
 
     }
 
-
+    
 }

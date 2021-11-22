@@ -19,11 +19,12 @@ public class GameManager : MonoBehaviour
     public PlayerController Player;
     public Transform PlayerTransform;
     public List<EnemyAI> Enemies = new List<EnemyAI>();
+    public PlayerData PD;
 
     void Awake()
     {
         
-        Debug.Log("GameManager Awake");
+        //Debug.Log("GameManager Awake");
 
         if (instance == null)
         {
@@ -39,12 +40,14 @@ public class GameManager : MonoBehaviour
     private void Start() //find object playerdata, checar se ele existe, se não, criar.
     {
 
-        Debug.Log("GameManager Start");
+        //Debug.Log("GameManager Start");
 
-        GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         
-        LastCheckpointPos = GM.LastCheckpointPos;
-        LastCheckpointPos = new Vector2 (-6f, -4f);
+        GM = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        CreatePlayerData();
+        PD = PlayerData.PData;
+        LastCheckpointPos = PD.Last;
+        //Debug.Log(LastCheckpointPos);
         Time.timeScale = 1f;
         SearchPausePanel();
         Respawn();
@@ -55,13 +58,14 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        LastCheckpointPos = PD.Last;
         CheckUpdate();
     }
 
     public void Respawn()
     {
 
-        Debug.Log("Respawn");
+        //Debug.Log("Respawn");
 
         GameObject PlayerGO = Instantiate(playerPrefab, new Vector3 (LastCheckpointPos.x, LastCheckpointPos.y, 0), Quaternion.identity);
         Player = PlayerGO.GetComponent<PlayerController>();
@@ -120,11 +124,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SetLastCheckpoint(Vector3 CheckpointPosition)
-    {
-        
-    }
-
     public void GetEnemies()
     {
         Enemies.AddRange(GameObject.FindObjectsOfType<EnemyAI>());
@@ -132,6 +131,17 @@ public class GameManager : MonoBehaviour
         {
             Enemy.SetPlayer(Player);
         }
+    }
+
+    public void CreatePlayerData()
+    {
+
+        if(PlayerData.PData == null)
+        {
+            Instantiate(new GameObject("PlayerData").AddComponent<PlayerData>(), new Vector3(0f, 0f, 0f), Quaternion.identity);
+        }
+
+
     }
 
 }
