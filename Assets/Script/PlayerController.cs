@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-    public static PlayerController instance;
+    public static PlayerController PController;
     
     public Camera cam;
 
@@ -45,6 +45,11 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
      {
+        if(PController == null)
+        {
+            PController = this;
+        }
+
         rb = GetComponent<Rigidbody2D>();
         Velocity = new Vector2();
      }
